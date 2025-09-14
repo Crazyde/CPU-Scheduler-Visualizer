@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CPU Scheduling Visualizer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="header">
+    <h1>⚙️ CPU Scheduling Visualizer</h1>
+    <p>Simulate and compare classic scheduling algorithms</p>
+  </div>
+
+  <div class="container">
+    <div class="panel input-panel">
+      <h2>Input</h2>
+
+      <div class="input-group">
+        <label for="algorithm">Algorithm</label>
+        <select id="algorithm">
+          <option value="" selected disabled>Choose scheduling algorithm…</option>
+          <option value="fcfs">1. First Come First Serve (FCFS)</option>
+          <option value="sjf">2. Shortest Job First (SJF - Non Preemptive)</option>
+          <option value="srtf">3. Shortest Remaining Time First (SRTF - Preemptive)</option>
+          <option value="priority">4. Priority Scheduling (Non Preemptive)</option>
+          <option value="ppriority">5. Priority Scheduling (Preemptive)</option>
+          <option value="rr">6. Round Robin (RR)</option>
+          <option value="hrrn">7. Highest Response Ratio Next (HRRN)</option>
+          <option value="mlfq">8. Multilevel Feedback Queue (First-Level)</option>
+          <option value="mlfqexp">9. Multilevel Feedback Queue (Exponential Quantum)</option>
+          <option value="aging">10. Priority with Aging</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label for="proc-count">Number of Processes</label>
+        <div class="proc-count-control">
+          <button type="button" id="p-dec" class="q-btn" aria-label="Decrease process count">−</button>
+          <input type="number" id="proc-count" class="q-number" min="1" max="50" step="1" placeholder="Choose number of processes" />
+          <button type="button" id="p-inc" class="q-btn" aria-label="Increase process count">+</button>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="arrival">Arrival Times (comma separated)</label>
+        <input type="text" id="arrival" class="csv-numeric" inputmode="numeric" pattern="[0-9,]*" placeholder="e.g. 0,2,4,6" />
+      </div>
+
+      <div class="input-group">
+        <label for="burst">Burst Times (comma separated)</label>
+        <input type="text" id="burst" class="csv-numeric" inputmode="numeric" pattern="[0-9,]*" placeholder="e.g. 3,6,4,5" />
+      </div>
+
+      <div class="input-group" id="priority-group" style="display:none;">
+        <label for="priority">Priority (comma separated)</label>
+        <input type="text" id="priority" class="csv-numeric" inputmode="numeric" pattern="[0-9,]*" placeholder="e.g. 2,1,3,4" />
+      </div>
+
+      <div class="input-group" id="priority-order-group" style="display:none;">
+        <label for="priority-order">Priority Order</label>
+        <select id="priority-order">
+          <option value="lower">Lower value = Higher Priority</option>
+          <option value="higher">Higher value = Higher Priority</option>
+        </select>
+      </div>
+
+      <div class="input-group" id="quantum-group" style="display:none;">
+        <label for="quantum">Time Quantum (RR)</label>
+        <div class="quantum-control">
+          <button type="button" id="q-dec" class="q-btn" aria-label="Decrease quantum">−</button>
+          <input type="number" id="quantum" class="q-number" min="1" max="50" step="1" value="2" />
+          <button type="button" id="q-inc" class="q-btn" aria-label="Increase quantum">+</button>
+        </div>
+        <div class="q-hint">Use − / + to adjust the quantum.</div>
+      </div>
+
+      <div class="input-group">
+        <label for="operation">Output Mode</label>
+        <select id="operation">
+          <option value="TRACE">TRACE (Gantt + timeline)</option>
+          <option value="STATS">STATS (statistics table)</option>
+        </select>
+      </div>
+
+      <button id="run-btn">🚀 Run Scheduler</button>
+      <div id="status" class="status"></div>
+    </div>
+
+    <div class="panel output-panel">
+      <h2>Output</h2>
+      <div id="output"></div>
+    </div>
+  </div>
+
+  <div class="footer">© 2025 CPU Scheduling Visualizer</div>
+
+  <script src="scheduler.js"></script>
+  <script>
+    const algoSel = document.getElementById('algorithm');
+    algoSel.addEventListener('change', function () {
+      const val = this.value;
+      document.getElementById('quantum-group').style.display = val === 'rr' ? 'block' : 'none';
+      const showPr = (val === 'priority' || val === 'ppriority' || val === 'aging');
+      document.getElementById('priority-group').style.display = showPr ? 'block' : 'none';
+      document.getElementById('priority-order-group').style.display = showPr ? 'block' : 'none';
+    });
+
+    // Quantum controls: simple +/- around a number input
+    const num    = document.getElementById('quantum');
+    const decBtn = document.getElementById('q-dec');
+    const incBtn = document.getElementById('q-inc');
+    function clamp(v){ const min=Number(num.min)||1, max=Number(num.max)||50; return Math.max(min, Math.min(max, v)); }
+    decBtn.addEventListener('click', () => { num.value = clamp((Number(num.value)||1) - 1); });
+    incBtn.addEventListener('click', () => { num.value = clamp((Number(num.value)||1) + 1); });
+
+    // Process count control (no per-row table)
+    const procCountEl = document.getElementById('proc-count');
+    const pDecBtn = document.getElementById('p-dec');
+    const pIncBtn = document.getElementById('p-inc');
+    function clampProc(v){ const min=Number(procCountEl.min)||1, max=Number(procCountEl.max)||50; return Math.max(min, Math.min(max, v)); }
+    pDecBtn.addEventListener('click', () => { const cur = Number(procCountEl.value)||1; procCountEl.value = clampProc(cur - 1); });
+    pIncBtn.addEventListener('click', () => { const cur = Number(procCountEl.value)||0; procCountEl.value = clampProc(cur + 1); });
+
+    // CSV numeric inputs: allow only digits and commas; no auto-insert comma
+    function getProcCount(){
+      const v = Number(document.getElementById('proc-count')?.value);
+      return Number.isFinite(v) && v > 0 ? v : null;
+    }
+    function isLimitedField(el){ return el && (el.id === 'arrival' || el.id === 'burst'); }
+    function sanitizeCsvNumeric(s){
+      if (!s) return '';
+      // Normalize alternative separators to ASCII comma
+      s = s.replace(/[\.,،，﹐﹑､]/g, ',');
+      // Keep only digits and commas; drop spaces and others
+      s = s.replace(/[^0-9,]/g, '');
+      s = s.replace(/,+/g, ',');           // collapse multiple commas
+      s = s.replace(/^,|,$/g, '');         // trim leading/trailing comma
+      return s;
+    }
+    function handleKeydownCsv(e){
+      const allowedNav = ['Backspace','Delete','ArrowLeft','ArrowRight','Home','End','Tab'];
+      if (allowedNav.includes(e.key) || (e.ctrlKey||e.metaKey)) return; // allow navigation and shortcuts
+      const el = e.target;
+      const maxProcs = isLimitedField(el) ? getProcCount() : null;
+      const valueSan = sanitizeCsvNumeric(String(el.value||''));
+      const parts = valueSan.split(',').filter(Boolean);
+      const endsWithComma = /,$/.test(valueSan);
+      // Enforce that count cannot exceed process count
+      if (maxProcs && parts.length >= maxProcs) {
+        // Block actions that would start a new token: comma/space/enter, or a digit when ending with comma
+        if (e.key === ',' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); return; }
+        if (endsWithComma && /^[0-9]$/.test(e.key)) { e.preventDefault(); return; }
+      }
+      // Normalize all comma-like keys and insert a comma explicitly
+      const commaLike = [',', '.', '،', '，', '﹐', '﹑', '､'];
+      if (commaLike.includes(e.key)) {
+        e.preventDefault();
+        // Respect process limit; also avoid double commas
+        const valueSan2 = sanitizeCsvNumeric(String(el.value||''));
+        const parts2 = valueSan2.split(',').filter(Boolean);
+        const atLimit2 = !!(maxProcs && parts2.length >= maxProcs);
+        if (atLimit2) return;
+        const start = el.selectionStart ?? el.value.length; const end = el.selectionEnd ?? el.value.length;
+        // Prevent consecutive commas when caret is at a comma
+        const prevChar = el.value.slice(Math.max(0, start-1), start);
+        if (prevChar === ',') return;
+        el.setRangeText(',', start, end, 'end');
+        return;
+      }
+      // Block space/enter entirely (no auto-comma)
+      if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); return; }
+      if (e.key === ',') return;           // allow comma if user chooses
+      if (/^[0-9]$/.test(e.key)) return;   // allow digits
+      e.preventDefault();
+    }
+    function limitCsvToProcessCount(el){
+      const max = isLimitedField(el) ? getProcCount() : null;
+      if (!max) return;
+      const parts = sanitizeCsvNumeric(el.value).split(',').filter(Boolean);
+      if (parts.length > max) {
+        el.value = parts.slice(0, max).join(',');
+      }
+    }
+    function handleInputCsv(e){
+      e.target.value = sanitizeCsvNumeric(e.target.value);
+      limitCsvToProcessCount(e.target);
+    }
+    function handleBlurCsv(e){
+      e.target.value = sanitizeCsvNumeric(e.target.value).replace(/,+$/,'');
+    }
+    document.querySelectorAll('.csv-numeric').forEach(el => {
+      el.addEventListener('keydown', handleKeydownCsv);
+      el.addEventListener('input', handleInputCsv);
+      el.addEventListener('blur', handleBlurCsv);
+    });
+
+    document.getElementById('run-btn').addEventListener('click', () => { solve(); });
+    // Initial welcome message in Output panel
+    if (typeof renderWelcome === 'function') { renderWelcome(); }
+  </script>
+</body>
+</html>

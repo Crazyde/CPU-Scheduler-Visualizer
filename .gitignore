@@ -1,0 +1,33 @@
+# OS/macOS
+.DS_Store
+
+# Editors/IDE
+.vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.env
+.venv/
+venv/
+env/
+
+# C/C++ build artifacts
+*.o
+*.obj
+*.exe
+*.out
+*.a
+*.lo
+*.la
+
+# Logs
+*.log
+
+# Build/Dist
+build/
+dist/

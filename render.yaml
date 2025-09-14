@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: cpu-scheduler
+    env: docker
+    plan: free
+    autoDeploy: true
+    healthCheckPath: /
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"

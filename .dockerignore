@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+.venv/
+*.pyc
+
+# Build artifacts
+*.o
+lab4
+result
+
+# VCS
+.git
+.gitignore
+
+# OS/files
+.DS_Store
+
