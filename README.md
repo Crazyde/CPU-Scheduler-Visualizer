@@ -1,7 +1,8 @@
 # CPU Scheduler Visualizer
 
 This project is a comprehensive **CPU Scheduling Algorithms Visualizer and Simulator**. It is built to help students and professionals understand how different CPU scheduling algorithms work and how they affect process execution over time.
-![initial](img/initial.png)
+
+![initial](img/Initial.png)
 
 ## 🖥️ What It Does
 
