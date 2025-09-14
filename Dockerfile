@@ -25,6 +25,6 @@ ENV PORT=5001
 # Expose the service port (optional; informative)
 EXPOSE 5001
 
-# Start the Flask app via gunicorn
-CMD ["gunicorn", "-w", "2", "-k", "gthread", "--threads", "4", "-b", "0.0.0.0:${PORT}", "server:app"]
-
+# Start the Flask app via gunicorn.
+# Use a shell so $PORT is expanded at runtime on Render (exec-form doesn't expand env vars).
+CMD ["sh", "-c", "exec gunicorn -w 2 -k gthread --threads 4 -b 0.0.0.0:${PORT:-5001} server:app"]
