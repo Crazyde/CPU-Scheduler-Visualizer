@@ -73,6 +73,15 @@ async function solve() {
     }
   }
 
+  // Ensure all burst times are positive numbers (avoid NaN in backend stats)
+  for (let i = 0; i < burst.length; i++) {
+    const b = Number(burst[i]);
+    if (!Number.isFinite(b) || b <= 0) {
+      showStatus("❌ Each Burst must be a positive number (greater than 0).", true);
+      return;
+    }
+  }
+
   const totalBurst = sum(burst);
   const lastInstantHint = totalBurst + Math.max(0, Math.min(...arrival));
 
