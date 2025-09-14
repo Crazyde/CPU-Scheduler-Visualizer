@@ -90,6 +90,10 @@ input,select{
   outline:none;transition:border .18s, box-shadow .18s;
   backdrop-filter: blur(6px);
 }
+/* Ensure dropdown lists (native <option>) are readable on light popups */
+select option{ color:#0f172a; background:#ffffff; }
+select option[disabled]{ color:#64748b; }
+select option:checked, select option:hover{ color:#0b1220; background:#e6f0ff; }
 input:focus,select:focus{
   border-color:var(--accent);
   box-shadow:0 0 0 3px rgba(142,197,255,.25);
